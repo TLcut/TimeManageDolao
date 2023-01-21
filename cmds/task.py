@@ -38,6 +38,7 @@ class Task(Cog_Extension):
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
                 self.data = json.load(file)
             self.data["timering"].append(msg)
+            
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
                 json.dump(self.data,file)
             await ctx.send(f"Timer set on {str(msg)}")
@@ -50,6 +51,33 @@ class Task(Cog_Extension):
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
                 json.dump(self.data,file)
             await ctx.send("Timers clear!")
+    
+    @commands.command()
+    async def will_say(self,ctx,*msg):
+        try:
+            if len(msg[0]) == 4 and msg[0].isdigit() and msg[1:] != None:
+                send_msg = msg[1]
+                try:
+                    for word in msg[2:]:
+                        send_msg += " "+word
+                except:
+                    pass
+                await ctx.send(f"{msg[0]} will send '{send_msg}'")
+            with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
+                self.data = json.load(file)
+            self.data["willsay"].append((msg[0],send_msg))
+            with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
+                json.dump(self.data,file)
+        except:
+            pass
+    @commands.command()
+    async def del_will_say(self,ctx):
+            with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
+                self.data = json.load(file)
+            self.data["willsay"] = []
+            with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
+                json.dump(self.data,file)
+            await ctx.send("willsay clear!")
 
 async def setup(bot):
     await bot.add_cog(Task(bot=bot))
