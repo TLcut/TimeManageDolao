@@ -3,12 +3,12 @@ from discord.ext import commands
 import json
 import asyncio
 import datetime
+import os
 
 with open("./items.json",mode="r") as file:
     data = json.load(file)
 
 intent = discord.Intents.all()
-
 bot = commands.Bot(command_prefix="[",intents=intent)
 
 @bot.event
@@ -24,16 +24,25 @@ async def on_member_remove(member):
     print(f"{member} leave!")
     
 @bot.command()
-async def ping(ctx):
-    await ctx.send(f"pong!機器人延遲了: {round(bot.latency*1000)} ms")
+async def load(ctx,extension):
+    bot.load_extension(f"cmds.{extension}")
+    await ctx.send(f"Loaded {extension} done.")
     
 @bot.command()
-async def say(ctx,*msg):
-    await ctx.message.delete()
-    sendmsg = ""
-    for word in msg:
-        sendmsg += word + " "
-    await ctx.send(sendmsg)
+async def unload(ctx,extension):
+    bot.unload_extension(f"cmds.{extension}")
+    await ctx.send(f"Un - Loaded {extension} done.")
+
+@bot.command()
+async def reload(ctx,extension):
+    bot.reload_extension(f"cmds.{extension}")
+    await ctx.send(f"Re - Loaded {extension} done.")
     
-if __name__ == "__main__":
-    bot.run(data["token"])
+async def main():
+    for filename in  os.listdir("./cmds"):
+        if filename.endswith("py"):
+            await bot.load_extension(f"cmds.{filename[:-3]}")
+    await bot.start(data["token"])
+    
+if __name__=="__main__":
+    asyncio.run(main())
