@@ -80,4 +80,4 @@ class Task(Cog_Extension):
             await ctx.send("willsay clear!")
 
 async def setup(bot):
-    await bot.add_cog(Task(bot=bot))
+    await bot.add_cog(Task(bot=bot)) 
