@@ -28,21 +28,6 @@ async def on_member_remove(member):
 async def on_command_error(ctx,error):
     await ctx.send(f"Rrrr報錯了XUX:\n```{error}```")
     
-@bot.command()
-async def load(ctx,extension):
-    await bot.load_extension(f"cmds.{extension}",package=None)
-    await ctx.send(f"Loaded {extension} done.")
-    
-@bot.command()
-async def unload(ctx,extension):
-    await bot.unload_extension(f"cmds.{extension}",package=None)
-    await ctx.send(f"Un - Loaded {extension} done.")
-
-@bot.command()
-async def reload(ctx,extension):
-    await bot.reload_extension(f"cmds.{extension}",package=None)
-    await ctx.send(f"Re - Loaded {extension} done.")
-    
 async def main():
     for filename in  os.listdir("./cmds"):
         if filename.endswith("py"):
