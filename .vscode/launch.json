@@ -1,0 +1,50 @@
+{
+    // 使用 IntelliSense 以得知可用的屬性。
+    // 暫留以檢視現有屬性的描述。
+    // 如需詳細資訊，請瀏覽: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
+
+{
+    // Use IntelliSense to find out which attributes exist for C# debugging
+    // Use hover for the description of the existing attributes
+    // For further information visit https://github.com/OmniSharp/omnishar...
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current Dir (external)",
+            "type": "python",
+            "request": "launch",
+            "cwd":"${fileDirname}",
+            "program": "${file}",
+            "console": "externalTerminal",
+            "env": {"PYTHONPATH": "${workspaceRoot}"},
+        },
+        {
+            "name": "Python: Current Dir (internal)",
+            "type": "python",
+            "request": "launch",
+            "cwd":"${fileDirname}",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "env": {"PYTHONPATH": "${workspaceRoot}"},
+         },
+        {
+             "name": "Python: Current File (Integrated Terminal)",
+             "type": "python",
+             "request": "launch",
+             "program": "${file}",
+             "console": "integratedTerminal",
+        }
+    ]
+ }
