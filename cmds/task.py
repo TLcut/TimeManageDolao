@@ -22,6 +22,12 @@ class Task(Cog_Extension):
             if now_time in self.data["timering"]:
                 await self.channel.send("times up!")
                 del self.data["timering"][self.data["timering"].index(now_time)]
+            for idx,word in enumerate(self.data["willsay"]):
+                if now_time in word[0]:
+                    await self.channel.send(f"{word[1]}")
+                    del self.data["willsay"][idx]
+                    break
+                
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
                 json.dump(self.data,file)
         except:

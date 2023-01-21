@@ -1,4 +1,5 @@
 import discord
+from discord import app_commands
 from discord.ext import commands
 import json
 import asyncio
@@ -9,7 +10,7 @@ with open("./items.json",mode="r") as file:
     data = json.load(file)
 
 intent = discord.Intents.all()
-bot = commands.Bot(command_prefix="[",intents=intent)
+bot = commands.Bot(command_prefix=">",intents=intent)
 
 @bot.event
 async def on_ready():
@@ -23,19 +24,23 @@ async def on_member_join(member):
 async def on_member_remove(member):
     print(f"{member} leave!")
     
+@bot.event
+async def on_command_error(ctx,error):
+    await ctx.send(f"Rrrr報錯了XUX:\n```{error}```")
+    
 @bot.command()
 async def load(ctx,extension):
-    bot.load_extension(f"cmds.{extension}")
+    await bot.load_extension(f"cmds.{extension}",package=None)
     await ctx.send(f"Loaded {extension} done.")
     
 @bot.command()
 async def unload(ctx,extension):
-    bot.unload_extension(f"cmds.{extension}")
+    await bot.unload_extension(f"cmds.{extension}",package=None)
     await ctx.send(f"Un - Loaded {extension} done.")
 
 @bot.command()
 async def reload(ctx,extension):
-    bot.reload_extension(f"cmds.{extension}")
+    await bot.reload_extension(f"cmds.{extension}",package=None)
     await ctx.send(f"Re - Loaded {extension} done.")
     
 async def main():

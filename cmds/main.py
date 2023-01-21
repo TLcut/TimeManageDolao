@@ -10,9 +10,9 @@ class Main(Cog_Extension):
     @commands.command()
     async def say(self,ctx,*msg):
         await ctx.message.delete()
-        sendmsg = ""
-        for word in msg:
-            sendmsg += word + " "
+        sendmsg = msg[0]
+        for word in msg[1:]:
+            sendmsg += " " + word
         await ctx.send(sendmsg)
         
 async def setup(bot):
