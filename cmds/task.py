@@ -44,7 +44,7 @@ class Task(Cog_Extension):
     @commands.command()
     async def timer(self,ctx,msg):
         if len(str(msg)) == 4 and msg.isdigit() and int(msg) > int(datetime.datetime.now().strftime('%H%M')):
-            await ctx.message.delete()
+            
             
             only_id = str(uuid.uuid1())
             only_data = None
@@ -92,8 +92,6 @@ class Task(Cog_Extension):
                     else:
                         run = False
             
-            await will_edit_message.delete()
-            
     @commands.command()
     async def del_timer(self,ctx):
         with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
@@ -107,7 +105,7 @@ class Task(Cog_Extension):
     async def will_say(self,ctx,*msg):
         try:
             if len(msg[0]) == 4 and msg[0].isdigit() and msg[1:] != None and int(msg[0]) > int(datetime.datetime.now().strftime('%H%M')):
-                await ctx.message.delete()
+                
                 only_id = str(uuid.uuid1())
                 only_data = None
                 send_msg = msg[1]
@@ -156,8 +154,6 @@ class Task(Cog_Extension):
                             break
                         else:
                             run = False
-                            
-                await will_edit_message.delete()
         except:
             pass
         
