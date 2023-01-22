@@ -9,7 +9,7 @@ class Event(Cog_Extension):
         print(">>bot is online")
         try:
             synced = await self.bot.tree.sync()
-            print(len(synced))
+            print("slash command(s) prepared done")
         except Exception as e:
             print(e)
             

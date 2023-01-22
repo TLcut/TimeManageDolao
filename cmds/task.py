@@ -90,23 +90,48 @@ class Task(Cog_Extension):
     
     @commands.command()
     async def will_say(self,ctx,*msg):
-        print(msg)
         try:
-            if len(msg[0]) == 4 and msg[0].isdigit() and msg[1:] != None:
+            if len(msg[0]) == 4 and msg[0].isdigit() and msg[1:] != None and int(msg[0]) > int(datetime.datetime.now().strftime('%H%M')):
+                only_id = str(uuid.uuid1())
+                only_data = None
                 send_msg = msg[1]
                 try:
                     for word in msg[2:]:
                         send_msg += " "+word
                 except:
                     pass
-                await ctx.send(f"{msg[0]} will send '{send_msg}'")
-            with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
-                self.data = json.load(file)
-            self.data["willsay"].append((msg[0],send_msg,ctx.channel.id))
-            with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
-                json.dump(self.data,file)
+                with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
+                    self.data = json.load(file)
+                self.data["willsay"].append((msg[0],send_msg,ctx.channel.id,only_id))
+                with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
+                    json.dump(self.data,file)
+                
+                now_time = datetime.datetime.now().strftime('%H%M')
+                now_time = int(now_time[:2])*60 + int(now_time[2:])
+                goal_time = int(msg[0][:2])*60 + int(msg[0][2:])
+
+                difference = abs(goal_time - now_time)
+        
+                will_edit_message = await ctx.send(f"還剩下 {str(difference)} min 會說出 {send_msg}")
+                
+                run =True
+                while run:
+                    now_time = datetime.datetime.now().strftime('%H%M')
+                    now_time = int(now_time[:2])*60 + int(now_time[2:])
+                    difference = abs(goal_time - now_time)
+                    await asyncio.sleep(1)
+                    await will_edit_message.edit(content = f"還剩下 {str(difference)} min 會說出 {send_msg}")
+                    with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
+                        only_data = json.load(file)
+                    for _timer in only_data["willsay"]:
+                        if only_id == _timer[3]:
+                            run = True
+                            break
+                        else:
+                            run = False
         except:
             pass
+        
     @commands.command()
     async def del_will_say(self,ctx):
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
