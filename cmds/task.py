@@ -1,12 +1,12 @@
 import discord
 from discord.ext import commands,tasks
 from core.classes import Cog_Extension
-import json,asyncio,datetime,time
+import json,datetime
 
 class Task(Cog_Extension):
     def __init__(self, bot):
         self.bot = bot
-        self.channel = self.bot.get_channel(1066232019513786448)
+        self.channel = None
         self.data = None
         self.clock.start()
 
@@ -19,11 +19,17 @@ class Task(Cog_Extension):
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
                 self.data = json.load(file)
             now_time = datetime.datetime.now().strftime('%H%M')
-            if now_time in self.data["timering"]:
-                await self.channel.send("times up!")
-                del self.data["timering"][self.data["timering"].index(now_time)]
+            
+            for idx,word in enumerate(self.data["timering"]):
+                if now_time == word[0]:
+                    self.channel = self.bot.get_channel(word[1])
+                    await self.channel.send("Time's up!")
+                    del self.data["timering"][idx]
+                    break
+                    
             for idx,word in enumerate(self.data["willsay"]):
-                if now_time in word[0]:
+                if now_time == word[0]:
+                    self.channel = self.bot.get_channel(word[2])
                     await self.channel.send(f"{word[1]}")
                     del self.data["willsay"][idx]
                     break
@@ -34,16 +40,11 @@ class Task(Cog_Extension):
                 pass
     
     @commands.command()
-    async def set_channel(self,ctx,ch:int):
-        self.channel = self.bot.get_channel(ch)
-        await ctx.send(f"set channel:{self.channel.mention}")
-    
-    @commands.command()
     async def timer(self,ctx,msg):
         if len(str(msg)) == 4 and msg.isdigit():
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
                 self.data = json.load(file)
-            self.data["timering"].append(msg)
+            self.data["timering"].append((msg,ctx.channel.id))
             
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
                 json.dump(self.data,file)
@@ -51,15 +52,16 @@ class Task(Cog_Extension):
             
     @commands.command()
     async def del_timer(self,ctx):
-            with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
-                self.data = json.load(file)
-            self.data["timering"] = []
-            with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
-                json.dump(self.data,file)
-            await ctx.send("Timers clear!")
+        with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
+            self.data = json.load(file)
+        self.data["timering"] = []
+        with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
+            json.dump(self.data,file)
+        await ctx.send("Timers clear!")
     
     @commands.command()
     async def will_say(self,ctx,*msg):
+        print(msg)
         try:
             if len(msg[0]) == 4 and msg[0].isdigit() and msg[1:] != None:
                 send_msg = msg[1]
@@ -71,7 +73,7 @@ class Task(Cog_Extension):
                 await ctx.send(f"{msg[0]} will send '{send_msg}'")
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
                 self.data = json.load(file)
-            self.data["willsay"].append((msg[0],send_msg))
+            self.data["willsay"].append((msg[0],send_msg,ctx.channel.id))
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
                 json.dump(self.data,file)
         except:
@@ -86,4 +88,4 @@ class Task(Cog_Extension):
             await ctx.send("willsay clear!")
 
 async def setup(bot):
-    await bot.add_cog(Task(bot=bot)) 
+    await bot.add_cog(Task(bot=bot))

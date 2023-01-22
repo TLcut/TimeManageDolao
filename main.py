@@ -12,22 +12,10 @@ with open("./items.json",mode="r") as file:
 intent = discord.Intents.all()
 bot = commands.Bot(command_prefix=">",intents=intent)
 
-@bot.event
-async def on_ready():
-    print(">>bot is online")
+@bot.command(name = "hi", description = "My first application Command")
+async def first_command(interaction):
+    await interaction.response.send_message("Hello!")
 
-@bot.event
-async def on_member_join(member):
-    print(f"{member} join!")
-
-@bot.event
-async def on_member_remove(member):
-    print(f"{member} leave!")
-    
-@bot.event
-async def on_command_error(ctx,error):
-    await ctx.send(f"Rrrr報錯了XUX:\n```{error}```")
-    
 async def main():
     for filename in  os.listdir("./cmds"):
         if filename.endswith("py"):
