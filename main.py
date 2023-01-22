@@ -10,7 +10,7 @@ with open("./items.json",mode="r") as file:
     data = json.load(file)
 
 intent = discord.Intents.all()
-bot = commands.Bot(command_prefix=">",intents=intent)
+bot = commands.Bot(command_prefix=">",intents=intent,help_command=None)
 
 @bot.tree.command(name="help")
 async def ping(interaction:discord.Integration):

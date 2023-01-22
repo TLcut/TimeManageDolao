@@ -29,5 +29,18 @@ class Main(Cog_Extension):
         await self.bot.reload_extension(f"cmds.{extension}",package=None)
         await ctx.send(f"Re - Loaded {extension} done.")
         
+    @commands.command()
+    async def help(self,ctx):
+        embed=discord.Embed(title="幫助清單", description="時間就是金錢，我們必須珍惜時光，好得到更多錢", color=0x50648b)
+        embed.set_author(name="時間管理俠")
+        embed.add_field(name="幫助欄位", value="\>help", inline=True)
+        embed.add_field(name="計時器", value="\>timer時分", inline=True)
+        embed.add_field(name="定時說話器", value="\>will_say時分", inline=True)
+        embed.add_field(name="清除定時器", value="\>del_timer", inline=True)
+        embed.add_field(name="清除定時說話器", value="\>del\_will_say", inline=True)
+        embed.add_field(name="跟我打乒乓球", value="\>ping", inline=True)
+        embed.set_footer(text="有效地運用您寶貴的時光")
+        await ctx.send(embed=embed)
+        
 async def setup(bot):
     await bot.add_cog(Main(bot=bot))
