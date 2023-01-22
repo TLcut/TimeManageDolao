@@ -1,4 +1,5 @@
 import discord
+from discord import app_commands
 from discord.ext import commands,tasks
 from core.classes import Cog_Extension
 
@@ -6,7 +7,12 @@ class Event(Cog_Extension):
     @commands.Cog.listener()
     async def on_ready(self):
         print(">>bot is online")
-
+        try:
+            synced = await self.bot.tree.sync()
+            print(len(synced))
+        except Exception as e:
+            print(e)
+            
     @commands.Cog.listener()
     async def on_member_join(self,member):
         print(f"{member} join!")

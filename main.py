@@ -1,6 +1,6 @@
 import discord
-from discord import app_commands
 from discord.ext import commands
+from discord import app_commands
 import json
 import asyncio
 import datetime
@@ -12,12 +12,12 @@ with open("./items.json",mode="r") as file:
 intent = discord.Intents.all()
 bot = commands.Bot(command_prefix=">",intents=intent)
 
-@bot.command(name = "hi", description = "My first application Command")
-async def first_command(interaction):
-    await interaction.response.send_message("Hello!")
+@bot.tree.command(name="help")
+async def ping(interaction:discord.Integration):
+    await interaction.response.send_message("```>help to get start```",ephemeral = False)
 
 async def main():
-    for filename in  os.listdir("./cmds"):
+    for filename in os.listdir("./cmds"):
         if filename.endswith("py"):
             await bot.load_extension(f"cmds.{filename[:-3]}")
     await bot.start(data["token"])

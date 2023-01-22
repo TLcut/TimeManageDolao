@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands,tasks
 from core.classes import Cog_Extension
 import json,datetime
+import uuid
+import asyncio
 
 class Task(Cog_Extension):
     def __init__(self, bot):
@@ -41,14 +43,41 @@ class Task(Cog_Extension):
     
     @commands.command()
     async def timer(self,ctx,msg):
-        if len(str(msg)) == 4 and msg.isdigit():
+        if len(str(msg)) == 4 and msg.isdigit() and int(msg) > int(datetime.datetime.now().strftime('%H%M')):
+            only_id = str(uuid.uuid1())
+            only_data = None
+            
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
                 self.data = json.load(file)
-            self.data["timering"].append((msg,ctx.channel.id))
-            
+                
+            self.data["timering"].append((msg,ctx.channel.id,only_id))
+    
             with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="w") as file:
                 json.dump(self.data,file)
-            await ctx.send(f"Timer set on {str(msg)}")
+            
+            now_time = datetime.datetime.now().strftime('%H%M')
+            now_time = int(now_time[:2])*60 + int(now_time[2:])
+            goal_time = int(msg[:2])*60 + int(msg[2:])
+            
+            difference = abs(goal_time - now_time)
+                
+            will_edit_message = await ctx.send(f"還剩下 {str(difference)} min")
+            run = True
+            
+            while run:
+                now_time = datetime.datetime.now().strftime('%H%M')
+                now_time = int(now_time[:2])*60 + int(now_time[2:])
+                difference = abs(goal_time - now_time)
+                await asyncio.sleep(1)
+                await will_edit_message.edit(content = f"還剩下 {str(difference)} min")
+                with open("C:\\Users\\User\\Documents\\GitHub\\TimeManageDolao\\items.json",mode="r") as file:
+                    only_data = json.load(file)
+                for _timer in only_data["timering"]:
+                    if only_id == _timer[2]:
+                        run = True
+                        break
+                    else:
+                        run = False
             
     @commands.command()
     async def del_timer(self,ctx):
