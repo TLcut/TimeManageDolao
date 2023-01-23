@@ -8,8 +8,8 @@
 >### 一般指令:
 ### 1.```>help```:開啟幫助欄位
 ![help](https://upload.cc/i1/2023/01/22/XRQD0w.png)
-### 2.```>timer```:建立計時器
+### 2.```>鬧鐘```:建立計時器
 ![timer](https://upload.cc/i1/2023/01/22/tyhMk4.png)
-### 3.```>will_say```:建立定時說話
+### 3.```>未來要說```:建立定時說話
 ![will_say](https://upload.cc/i1/2023/01/22/bdryhF.png)
 #### 等等實用的指令
