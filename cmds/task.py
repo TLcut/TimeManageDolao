@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands,tasks
 from core.classes import Cog_Extension
-import json,datetime,uuid,pytz,asyncio
+import json,datetime,uuid,pytz
 
 
 class Task(Cog_Extension):
@@ -25,7 +25,11 @@ class Task(Cog_Extension):
             for idx,word in enumerate(self.data["timering"]):
                 if now_time == word[0]:
                     self.channel = self.bot.get_channel(word[1])
-                    await self.channel.send("Time's up!")
+                    embed=discord.Embed(title="鬧鐘", description="嗶嗶嗶!叮叮叮!咚咚嚨咚鏘!", color=0x50648b)
+                    embed.set_author(name="時間管理俠",icon_url="https://cdn.discordapp.com/app-icons/1066037350813151362/1e8ab1aee21485086cea9c0bcc1449a4.png")
+                    embed.add_field(name="時間到囉!", value=f"{now_time[:2]}點{now_time[2:]}分呦!", inline=True)
+                    embed.set_footer(text="有效地運用您寶貴的時光")
+                    await self.channel.send(embed = embed)
                     del self.data["timering"][idx]
                     break
                     
@@ -65,7 +69,7 @@ class Task(Cog_Extension):
             difference = abs(goal_time - now_time)
             
             embed=discord.Embed(title="計時器", description="正在計時中", color=0x50648b)
-            embed.set_author(name="時間管理俠")
+            embed.set_author(name="時間管理俠",icon_url="https://cdn.discordapp.com/app-icons/1066037350813151362/1e8ab1aee21485086cea9c0bcc1449a4.png")
             embed.add_field(name="剩餘時間", value=f"{round(difference/60)}時{difference%60}分", inline=True)
             embed.set_footer(text="有效地運用您寶貴的時光")
                 
@@ -80,11 +84,10 @@ class Task(Cog_Extension):
                 difference = abs(goal_time - now_time)
                 
                 embed=discord.Embed(title="計時器", description="正在計時中", color=0x50648b)
-                embed.set_author(name="時間管理俠")
+                embed.set_author(name="時間管理俠",icon_url="https://cdn.discordapp.com/app-icons/1066037350813151362/1e8ab1aee21485086cea9c0bcc1449a4.png")
                 embed.add_field(name="剩餘時間", value=f"{round(difference/60)}時{difference%60}分", inline=True)
                 embed.set_footer(text="有效地運用您寶貴的時光")
                 
-                await asyncio.sleep(1)
                 await will_edit_message.edit(embed = embed)
                 with open("cmds/items.json",mode="r") as file:
                     only_data = json.load(file)
@@ -98,7 +101,7 @@ class Task(Cog_Extension):
     @commands.command()
     async def 未來要說(self,ctx,*msg):
         try:
-  
+            
             timezone=pytz.timezone("Asia/Taipei")
             if len(msg[0]) == 4 and msg[0].isdigit() and msg[1:] != None and int(msg[0]) > int(datetime.datetime.now(timezone).strftime('%H%M')):
                 
@@ -123,7 +126,7 @@ class Task(Cog_Extension):
                 difference = abs(goal_time - now_time)
 
                 embed=discord.Embed(title="定時說話器", description="正在計時中", color=0x50648b)
-                embed.set_author(name="時間管理俠")
+                embed.set_author(name="時間管理俠",icon_url="https://cdn.discordapp.com/app-icons/1066037350813151362/1e8ab1aee21485086cea9c0bcc1449a4.png")
                 embed.add_field(name="剩餘時間", value=f"{round(difference/60)}時{difference%60}分", inline=True)
                 embed.set_footer(text="有效地運用您寶貴的時光")
 
@@ -138,11 +141,13 @@ class Task(Cog_Extension):
                     difference = abs(goal_time - now_time)
                     
                     embed=discord.Embed(title="定時說話器", description="正在計時中", color=0x50648b)
-                    embed.set_author(name="時間管理俠")
-                    embed.add_field(name="剩餘時間", value=f"{round(difference/60)}時{difference%60}分", inline=True)
+                    embed.set_author(name="時間管理俠",icon_url="https://cdn.discordapp.com/app-icons/1066037350813151362/1e8ab1aee21485086cea9c0bcc1449a4.png")
+                    if not now_time == datetime.datetime.now(timezone).strftime('%H%M') == msg[0]:
+                        embed.add_field(name="剩餘時間", value=f"{round(difference/60)}時{difference%60}分", inline=True)
+                    else:
+                        embed.add_field(name="剩餘時間", value=f"已經到囉!", inline=True)
                     embed.set_footer(text="有效地運用您寶貴的時光")
                     
-                    await asyncio.sleep(1)
                     await will_edit_message.edit(embed = embed)
                     with open("cmds/items.json",mode="r") as file:
                         only_data = json.load(file)
@@ -156,4 +161,4 @@ class Task(Cog_Extension):
             pass
 
 async def setup(bot):
-    await bot.add_cog(Task(bot=bot)) 
+    await bot.add_cog(Task(bot=bot))
