@@ -12,4 +12,6 @@
 ![timer](https://upload.cc/i1/2023/01/22/tyhMk4.png)
 ### 3.```>未來要說```:建立定時說話
 ![will_say](https://upload.cc/i1/2023/01/22/bdryhF.png)
+### a.```>now```:顯示指定國家標準時間
+![now](https://upload.cc/i1/2023/01/23/FkLN8R.png)
 #### 等等實用的指令
