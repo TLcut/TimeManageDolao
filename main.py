@@ -5,8 +5,9 @@ import json
 import asyncio
 import datetime
 import os
+import keep_alive
 
-with open("./items.json",mode="r") as file:
+with open("./cmds/items.json",mode="r") as file:
     data = json.load(file)
 
 intent = discord.Intents.all()
@@ -23,4 +24,5 @@ async def main():
     await bot.start(data["token"])
     
 if __name__=="__main__":
+    keep_alive.keep_alive()
     asyncio.run(main())
