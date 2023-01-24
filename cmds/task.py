@@ -45,26 +45,26 @@ class Task(Cog_Extension):
         except:
                 pass
     
-    @commands.command()
-    async def 鬧鐘(self,ctx,msg):
+    @discord.slash_command(name = "ac",description = "設定一個鬧鐘")
+    async def ac(self,ctx:discord.ApplicationContext,hr:int,min:int):
         timezone=pytz.timezone("Asia/Taipei")
-        if len(str(msg)) == 4 and msg.isdigit() and int(msg) > int(datetime.datetime.now(timezone).strftime('%H%M')):
-            
-            
+        if len(str(hr)) == 2 and hr <= 24 and min < 60 and min >= 0 and hr >= 0 and hr*60 + min > int(datetime.datetime.now(timezone).strftime('%H'))*60 + int(datetime.datetime.now(timezone).strftime('%M')):
+
             only_id = str(uuid.uuid1())
             only_data = None
             
             with open("cmds/items.json",mode="r") as file:
                 self.data = json.load(file)
                 
-            self.data["timering"].append((msg,ctx.channel.id,only_id))
+            self.data["timering"].append((str(hr)+str(min),ctx.channel.id,only_id))
     
             with open("cmds/items.json",mode="w") as file:
                 json.dump(self.data,file)
-            timezone=pytz.timezone("Asia/Taipei")            
+            
+            timezone=pytz.timezone("Asia/Taipei")      
             now_time = datetime.datetime.now(timezone).strftime('%H%M')
             now_time = int(now_time[:2])*60 + int(now_time[2:])
-            goal_time = int(msg[:2])*60 + int(msg[2:])
+            goal_time = hr*60 + min
             
             difference = abs(goal_time - now_time)
             
@@ -72,8 +72,9 @@ class Task(Cog_Extension):
             embed.set_author(name="時間管理俠",icon_url="https://cdn.discordapp.com/app-icons/1066037350813151362/1e8ab1aee21485086cea9c0bcc1449a4.png")
             embed.add_field(name="剩餘時間", value=f"{round(difference/60)}時{difference%60}分", inline=True)
             embed.set_footer(text="有效地運用您寶貴的時光")
-                
-            will_edit_message = await ctx.send(embed = embed)
+            
+            await ctx.respond(f"Set on {hr}點{min}分")
+            will_edit_message = await ctx.respond(embed = embed)
             run = True
             
             while run:
@@ -98,30 +99,24 @@ class Task(Cog_Extension):
                     else:
                         run = False
     
-    @commands.command()
-    async def 未來要說(self,ctx,*msg):
+    @discord.slash_command(name = "fs",description = "讓機器人定時說話")
+    async def fs(self,ctx:discord.ApplicationContext,hr:int,min:int,content):
         try:
             
             timezone=pytz.timezone("Asia/Taipei")
-            if len(msg[0]) == 4 and msg[0].isdigit() and msg[1:] != None and int(msg[0]) > int(datetime.datetime.now(timezone).strftime('%H%M')):
+            if len(str(hr)) == 2 and hr <= 24 and min < 60 and min >= 0 and hr >= 0 and hr*60 + min > int(datetime.datetime.now(timezone).strftime('%H'))*60 + int(datetime.datetime.now(timezone).strftime('%M')):
                 
                 only_id = str(uuid.uuid1())
                 only_data = None
-                send_msg = msg[1]
-                try:
-                    for word in msg[2:]:
-                        send_msg += " "+word
-                except:
-                    pass
                 with open("cmds/items.json",mode="r") as file:
                     self.data = json.load(file)
-                self.data["willsay"].append((msg[0],send_msg,ctx.channel.id,only_id))
+                self.data["willsay"].append((str(hr)+str(min),content,ctx.channel.id,only_id))
                 with open("cmds/items.json",mode="w") as file:
                     json.dump(self.data,file)
                 timezone=pytz.timezone("Asia/Taipei")         
                 now_time = datetime.datetime.now(timezone).strftime('%H%M')
                 now_time = int(now_time[:2])*60 + int(now_time[2:])
-                goal_time = int(msg[0][:2])*60 + int(msg[0][2:])
+                goal_time = hr*60 + min
 
                 difference = abs(goal_time - now_time)
 
@@ -129,8 +124,9 @@ class Task(Cog_Extension):
                 embed.set_author(name="時間管理俠",icon_url="https://cdn.discordapp.com/app-icons/1066037350813151362/1e8ab1aee21485086cea9c0bcc1449a4.png")
                 embed.add_field(name="剩餘時間", value=f"{round(difference/60)}時{difference%60}分", inline=True)
                 embed.set_footer(text="有效地運用您寶貴的時光")
-
-                will_edit_message = await ctx.send(embed=embed)
+                
+                await ctx.respond(f"Set on {hr}點{min}分")
+                will_edit_message = await ctx.respond(embed=embed)
                 
                 run =True
                 while run:
@@ -147,7 +143,6 @@ class Task(Cog_Extension):
                     else:
                         embed.add_field(name="剩餘時間", value=f"已經到囉!", inline=True)
                     embed.set_footer(text="有效地運用您寶貴的時光")
-                    
                     await will_edit_message.edit(embed = embed)
                     with open("cmds/items.json",mode="r") as file:
                         only_data = json.load(file)
@@ -160,5 +155,5 @@ class Task(Cog_Extension):
         except:
             pass
 
-async def setup(bot):
-    await bot.add_cog(Task(bot=bot))
+def setup(bot):
+    bot.add_cog(Task(bot=bot))
